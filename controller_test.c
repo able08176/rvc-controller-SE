@@ -1,7 +1,7 @@
 //
 // Created by 박재영 on 2024. 11. 24..
 //
-#include "controller.h"
+#include "controller_test.h"
 
 int main() {
     int **test_Map;
