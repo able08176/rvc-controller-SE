@@ -45,8 +45,6 @@ void test_Controller(int **map, controller_Status *status) {
     obstacle_Location obstacle_Location;
     bool dust_Existence;
     cleaner_Command cleaner_Command;
-    cleaner_Command = set_Cleaner_Command(ON);
-    test_Cleaner_Interface(map, status, cleaner_Command);
     bool is_Backward = false;
 
     while (1) {
@@ -54,7 +52,6 @@ void test_Controller(int **map, controller_Status *status) {
         dust_Existence = test_Determine_DE(map, status);
 
         if (!obstacle_Location.F && !is_Backward) {
-            test_Move_Forward(map, status);
             if (dust_Existence) {
                 cleaner_Command = set_Cleaner_Command(UP);
                 test_Cleaner_Interface(map, status, cleaner_Command);
@@ -63,16 +60,21 @@ void test_Controller(int **map, controller_Status *status) {
                 cleaner_Command = set_Cleaner_Command(ON);
                 test_Cleaner_Interface(map, status, cleaner_Command);
             }
+            test_Move_Forward(map, status);
         } else if (!obstacle_Location.R) {
             test_Turn_Right(map, status);
-            cleaner_Command = set_Cleaner_Command(OFF);
-            test_Cleaner_Interface(map, status, cleaner_Command);
+            if (!is_Backward) {
+                cleaner_Command = set_Cleaner_Command(OFF);
+                test_Cleaner_Interface(map, status, cleaner_Command);
+            }
             sleep(1);
             is_Backward = false;
         } else if (!obstacle_Location.L) {
             test_Turn_Left(map, status);
-            cleaner_Command = set_Cleaner_Command(OFF);
-            test_Cleaner_Interface(map, status, cleaner_Command);
+            if (!is_Backward) {
+                cleaner_Command = set_Cleaner_Command(OFF);
+                test_Cleaner_Interface(map, status, cleaner_Command);
+            }
             sleep(1);
             is_Backward = false;
         } else {
