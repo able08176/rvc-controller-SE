@@ -83,6 +83,7 @@ void test_Controller(int **map, controller_Status *status) {
             test_Move_Backward(map, status);
             is_Backward = true;
         }
+        printf("\n");
         sleep(1);
     }
 }
