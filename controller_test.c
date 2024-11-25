@@ -10,7 +10,7 @@ int main() {
         {1, 1, 1, 1, 0},
         {1, 1, 1, 1, 1},
         {0, 0, 1, 1, 0},
-        {1, 1, 1, 1, 0}
+        {1, 2, 2, 1, 0}
     };
     int row = 5;
     int col = 5;
@@ -247,7 +247,7 @@ bool test_Determine_DE(int **map, controller_Status *status) {
 }
 
 bool test_DS_Interface(int **map, controller_Status *status) {
-    if (map[status->row_Num][status->col_Num] >= 2) {
+    if (map[status->row_Num][status->col_Num] == 2) {
         printf("Dust Detected!\n");
         return true;
     } else

@@ -33,14 +33,6 @@ typedef struct _Motor_Command {
     bool B;
 } motor_Command;
 
-typedef struct _Controller_Status {
-    int rows;
-    int cols;
-    int row_Num;
-    int col_Num;
-    char direction;
-} controller_Status;
-
 void controller(void);
 
 obstacle_Location determine_OL(void);
