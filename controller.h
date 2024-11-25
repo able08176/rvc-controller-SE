@@ -55,7 +55,7 @@ bool RS_Interface(void);
 
 bool DS_Interface(void);
 
-//void Cleaner_Interface(cleaner_Command cleaner_Command);
+void Cleaner_Interface(cleaner_Command cleaner_Command);
 
 void Motor_Interface(motor_Command motor_Command);
 
