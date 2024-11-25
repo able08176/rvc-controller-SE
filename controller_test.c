@@ -6,11 +6,11 @@
 int main() {
     int **test_Map;
     int test_Arr[5][5] = {
-            {0, 0, 1, 1, 0},
-            {1, 1, 1, 1, 0},
-            {1, 1, 1, 1, 1},
-            {0, 0, 1, 1, 0},
-            {1, 1, 1, 1, 0}
+        {0, 0, 1, 1, 0},
+        {1, 1, 1, 1, 0},
+        {1, 1, 1, 1, 1},
+        {0, 0, 1, 1, 0},
+        {1, 1, 1, 1, 0}
     };
     int row = 5;
     int col = 5;
@@ -310,7 +310,11 @@ void test_Motor_Interface(int **map, controller_Status *status, motor_Command mo
             break;
     }
 
-    if (motor_Command.F || motor_Command.B) {
+    if (motor_Command.F) {
+        printf("Move Forward!\n");
+        printf("(%d, %d)\n", status->row_Num, status->col_Num);
+    } else if (motor_Command.B) {
+        printf("Move Backward!\n");
         printf("(%d, %d)\n", status->row_Num, status->col_Num);
     } else if (motor_Command.L) {
         printf("Turn Left!\n");
