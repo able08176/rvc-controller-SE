@@ -1,20 +1,20 @@
 #include "unitTest.h"
 
 int main(void) {
-        int choose_Unit;
+    int choose_Unit;
 	obstacle_Location OL;
 	bool DE;
 	motor_Command MC;
 	cleaner_Command CC;
 	bool is_Backward;
-	int mode;
+	int mode, direction;
 
     while (1) {
         printf("----------Units for test----------\n");
         printf("1.  FS_Interface\n");
         printf("2.  LS_Interface\n");
         printf("3.  RS_Interface\n");
-        printf("4.  DS_Interface\n");
+        printf("4.  DS_Interface\n");   
         printf("5.  Determine_OL\n");
         printf("6.  Determine_DE\n");
         printf("7.  Set_Cleaner_Command\n");
@@ -24,8 +24,10 @@ int main(void) {
         printf("11. Stop\n");
         printf("12. Move_Backward\n");
         printf("13. Controller\n");
-        printf("14. EXIT PROGRAM\n");
-        printf("choose the number(EXIT is 14): ");
+        printf("14. Motor_Interface\n");
+        printf("15. Cleaner_Interface\n");
+        printf("16. EXIT PROGRAM\n");
+        printf("choose the number(EXIT is 16): ");
         scanf("%d", &choose_Unit);
 	printf("\n");
         
@@ -81,17 +83,44 @@ int main(void) {
             	scanf("%d", &is_Backward);
             	printf("Dust Existence(D) value: ");
             	scanf("%d", &DE);
-            	printf("Obstacle Location(F, L, R, B) value: ");
+            	printf("Obstacle Location(F, L, R) value: ");
             	scanf("%d %d %d", &OL.F, &OL.L, &OL.R);
 
             	controller(is_Backward, OL, DE);
 		break;
-	    case 14:
+            case 14:
+		printf("1) Move Forward\n2) Turn Right\n3) Turn Left\n4) Move Backward\n5) Stop\nchoose one: ");
+		scanf("%d", &direction);
+
+		if (direction == 1)
+		    MC = move_Forward();
+		else if (direction == 2)
+		    MC = turn_Right();
+		else if (direction == 3)
+		    MC = turn_Left();
+		else if (direction == 4)
+		    MC = move_Backward();
+		else
+		    MC = stop();
+		
+	    	printf("\n");	
+		Motor_Interface(MC);
+		break;
+            case 15:
+		printf("1) ON\n2) OFF\n3) UP\nchoose one: ");	
+		scanf("%d", &mode);
+		CC = set_Cleaner_Command(mode-1);
+
+		printf("\n");
+		Cleaner_Interface(CC);
+		break;
+	    case 16:
 		printf("Exit the program...\n");
 	     	return 0;
 	    default:
 		printf("Please choose the correct number!\n");
-        }    
+        }
+        printf("\n");
     }
 }
 
@@ -259,9 +288,27 @@ cleaner_Command set_Cleaner_Command(int set_num) {
 }
 
 void Motor_Interface(motor_Command motor_Command) {
+    if (motor_Command.F)
+        printf("Move Forward\n");
+    else if (motor_Command.R)
+        printf("Turn Right\n");
+    else if (motor_Command.L)
+        printf("Turn Left\n");
+    else if (motor_Command.B)
+        printf("Move Backward\n");
+    else
+        printf("Stop\n");
+
 	return;
 }
 
 void Cleaner_Interface(cleaner_Command cleaner_Command) {
-	return;
+    if (cleaner_Command.on)
+        printf("On\n");
+    else if (cleaner_Command.off)
+        printf("Off\n");
+    else
+        printf("Up\n");
+    
+    return;
 }
