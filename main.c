@@ -169,3 +169,13 @@ cleaner_Command set_Cleaner_Command(int set_num) {
 
     return cleaner_Command;
 }
+
+void Motor_Interface(motor_Command motor_Command) {
+    // decide direction of RV by motor_Command
+    return;
+}
+
+void Cleaner_Interface(cleaner_Command cleaner_Command) {
+    // control the cleaenr by cleaner_Command
+    return;
+}
