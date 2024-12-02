@@ -67,7 +67,10 @@ int main(void) {
 		(NULL == CU_add_test(pSuite, "test of controller_Power_Up", test_Controller_UP)) ||
  		(NULL == CU_add_test(pSuite, "test of controller_Turn_Right", test_Controller_TR)) ||
 		(NULL == CU_add_test(pSuite, "test of controller_Turn_Left", test_Controller_TL)) ||
-		(NULL == CU_add_test(pSuite, "test of controller_Stop_and_Move_Backward", test_Controller_SMB)))
+		(NULL == CU_add_test(pSuite, "test of controller_Stop_and_Move_Backward", test_Controller_SMB)) ||
+		(NULL == CU_add_test(pSuite, "test of controller_Move_Backward_and_Turn_Right", test_Controller_MBTR)) ||
+		(NULL == CU_add_test(pSuite, "test of controller_Move_Backward_and_Turn_Left", test_Controller_MBTL)) ||
+		(NULL == CU_add_test(pSuite, "test of controller_Keep_Move_Backward", test_Controller_MBMB)))
 	{
 		CU_cleanup_registry();
 		return CU_get_error();
@@ -342,19 +345,20 @@ void test_Motor_Interface(void) {
     mc.L = false;
     mc.R = false;
     mc.B = false;
-    CU_ASSERT_STRING_EQUAL(Motor_Interface(mc), "Stop");	
+    CU_ASSERT_STRING_EQUAL(Motor_Interface(mc), "Stop");
+
+    mc.F = true;
+    mc.L = true;
+    mc.R = false;
+    mc.B = false;
+    CU_ASSERT_STRING_EQUAL(Motor_Interface(mc), "Turn Left");	
 }
 
 // suite 2
 void test_Determine_OL(void) {
-    obstacle_Location ANS1;
-    ANS1.F = true;
-    ANS1.L = false;
-    ANS1.R = false;
-
-    CU_ASSERT(true == ((determine_OL(67, 12, 33).F == ANS1.F) 
-		&& (determine_OL(67, 12, 33).L == ANS1.L) 
-		&& (determine_OL(67, 12, 33).R == ANS1.R)));
+    CU_ASSERT(true == ((determine_OL(67, 12, 33).F == true) 
+		&& (determine_OL(67, 12, 33).L == false) 
+		&& (determine_OL(67, 12, 33).R == false)));
 }
 void test_Determine_DE(void) {
     CU_ASSERT(determine_DE(true) == true);
@@ -466,4 +470,33 @@ void test_Controller_SMB(void) {
         OL.L = true;
         OL.R = true;
         CU_ASSERT_STRING_EQUAL(controller(false, OL, false), "{0, 0, 0, 0}, {0, 1, 0}, {0, 0, 0, 1}");
+}
+void test_Controller_MBTR(void) {
+	obstacle_Location OL;
+
+        OL.F = false;
+        OL.L = true;
+        OL.R = false;
+        CU_ASSERT_STRING_EQUAL(controller(true, OL, false), "{0, 0, 1, 0}, {0, 1, 0}");
+
+        OL.F = false;
+        OL.L = false;
+        OL.R = false;
+        CU_ASSERT_STRING_EQUAL(controller(true, OL, false), "{0, 0, 1, 0}, {0, 1, 0}");
+}
+void test_Controller_MBTL(void) {
+        obstacle_Location OL;
+
+        OL.F = false;
+        OL.L = false;
+        OL.R = true;
+        CU_ASSERT_STRING_EQUAL(controller(true, OL, false), "{0, 1, 0, 0}, {0, 1, 0}");
+}
+void test_Controller_MBMB(void) {
+        obstacle_Location OL;
+
+        OL.F = true;
+        OL.L = true;
+        OL.R = true;
+        CU_ASSERT_STRING_EQUAL(controller(true, OL, false), "{0, 0, 0, 1}, {0, 1, 0}");
 }

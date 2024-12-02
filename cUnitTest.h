@@ -80,5 +80,8 @@ void test_Controller_UP(void);
 void test_Controller_TR(void);
 void test_Controller_TL(void);
 void test_Controller_SMB(void);
+void test_Controller_MBTR(void);
+void test_Controller_MBTL(void);
+void test_Controller_MBMB(void);
 
 #endif //RVC_CONTROLLER_CONTROLLER_H
