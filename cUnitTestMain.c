@@ -314,6 +314,11 @@ void test_Cleaner_Interface(void) {
     cc.off = false;
     cc.up = true;
     CU_ASSERT_STRING_EQUAL(Cleaner_Interface(cc), "UP");
+
+    cc.on = true;
+    cc.off = false;
+    cc.up = true;
+    CU_ASSERT_STRING_EQUAL(Cleaner_Interface(cc), "UP");
 }
 void test_Motor_Interface(void) {
     motor_Command mc;
