@@ -36,7 +36,7 @@ typedef struct _Motor_Command {
 } motor_Command;
 
 // RVC functions (refactoring for cUnit)
-void controller(bool is_Backward, obstacle_Location OL, bool DE);
+const char* controller(bool is_Backward, obstacle_Location OL, bool DE);
 obstacle_Location determine_OL(double fsi, double lsi, double rsi);
 bool determine_DE(bool dsi);
 bool FS_Interface(double sensor_input);

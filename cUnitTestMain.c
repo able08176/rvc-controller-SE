@@ -81,53 +81,31 @@ int main(void) {
 	return CU_get_error();
 }
 
-/*
-void controller(void) {
+const char* controller(bool is_Backward, obstacle_Location OL, bool DE) {
     obstacle_Location obstacle_Location;
+    const char *result;
     bool dust_Existence;
-    cleaner_Command cleaner_Command;
-    cleaner_Command = set_Cleaner_Command(OFF);
-    bool is_Backward = false;
 
-    while (1) {
-        obstacle_Location = determine_OL();
-        dust_Existence = determine_DE();
+    obstacle_Location = OL;
+    dust_Existence = DE;
 
-        if (!obstacle_Location.F && !is_Backward) {
-            move_Forward();
-            if (dust_Existence) {
-                cleaner_Command = set_Cleaner_Command(UP);
-                Cleaner_Interface(cleaner_Command);
-                sleep(4);
-            } else {
-                cleaner_Command = set_Cleaner_Command(ON);
-                Cleaner_Interface(cleaner_Command);
-            }
-        } else if (!obstacle_Location.R) {
-            turn_Right();
-            cleaner_Command = set_Cleaner_Command(OFF);
-            Cleaner_Interface(cleaner_Command);
-            sleep(4);
-            is_Backward = false;
-        } else if (!obstacle_Location.L) {
-            turn_Left();
-            cleaner_Command = set_Cleaner_Command(OFF);
-            Cleaner_Interface(cleaner_Command);
-            sleep(4);
-            is_Backward = false;
-        } else {
-            stop();
-            cleaner_Command = set_Cleaner_Command(OFF);
-            Cleaner_Interface(cleaner_Command);
-            sleep(1);
-            move_Backward();
-            is_Backward = true;
+    if (!obstacle_Location.F && !is_Backward) {
+        if (dust_Existence) {
+		result = "{1, 0, 0, 0}, {0, 0, 1}"; 
+	} else {
+		result = "{1, 0, 0, 0}, {1, 0, 0}";
         }
-        sleep(1);
+    } else if (!obstacle_Location.R) {
+	result = "{0, 0, 1, 0}, {0, 1, 0}"; 
+    } else if (!obstacle_Location.L) {
+	result = "{0, 1, 0, 0}, {0, 1, 0}";
+    } else {
+	result = "{0, 0, 0, 0}, {0, 1, 0}, {0, 0, 0, 1}";
     }
-}
-*/
 
+    return result;
+}
+                
 obstacle_Location determine_OL(double fsi, double lsi, double rsi) {
     obstacle_Location obstacle_Location;
 
@@ -417,22 +395,75 @@ void test_Move_Backward(void) {
 
 // suite 4
 void test_Set_Cleaner_Command(void) {
-
+	CU_ASSERT(true == ((set_Cleaner_Command(0).on == true)
+		    && (set_Cleaner_Command(0).off == false)
+ 		    && (set_Cleaner_Command(0).up == false)));
+	CU_ASSERT(true == ((set_Cleaner_Command(1).on == false)
+                    && (set_Cleaner_Command(1).off == true)
+                    && (set_Cleaner_Command(1).up == false)));
+	CU_ASSERT(true == ((set_Cleaner_Command(2).on == false)
+                    && (set_Cleaner_Command(2).off == false)
+                    && (set_Cleaner_Command(2).up == true)));
 }
 
 // suite 5
 void test_Controller_MF(void) {
+	obstacle_Location OL;
 
+	OL.F = false;
+	OL.L = false;
+	OL.R = false;
+	CU_ASSERT_STRING_EQUAL(controller(false, OL, false), "{1, 0, 0, 0}, {1, 0, 0}");
+
+	OL.F = false;
+        OL.L = true;
+        OL.R = false;
+        CU_ASSERT_STRING_EQUAL(controller(false, OL, false), "{1, 0, 0, 0}, {1, 0, 0}");
+
+	OL.F = false;
+        OL.L = false;
+        OL.R = true;
+        CU_ASSERT_STRING_EQUAL(controller(false, OL, false), "{1, 0, 0, 0}, {1, 0, 0}");
+
+	OL.F = false;
+        OL.L = true;
+        OL.R = true;
+        CU_ASSERT_STRING_EQUAL(controller(false, OL, false), "{1, 0, 0, 0}, {1, 0, 0}");
 }
 void test_Controller_UP(void) {
+        obstacle_Location OL;
 
+        OL.F = false;
+        OL.L = false;
+        OL.R = false;
+        CU_ASSERT_STRING_EQUAL(controller(false, OL, true), "{1, 0, 0, 0}, {0, 0, 1}");
 }
 void test_Controller_TR(void) {
+        obstacle_Location OL;
 
+        OL.F = true;
+        OL.L = false;
+        OL.R = false;
+        CU_ASSERT_STRING_EQUAL(controller(false, OL, false), "{0, 0, 1, 0}, {0, 1, 0}");
+
+	OL.F = true;
+        OL.L = true;
+        OL.R = false;
+        CU_ASSERT_STRING_EQUAL(controller(false, OL, false), "{0, 0, 1, 0}, {0, 1, 0}");
 }
 void test_Controller_TL(void) {
+        obstacle_Location OL;
 
+        OL.F = true;
+        OL.L = false;
+        OL.R = true;
+        CU_ASSERT_STRING_EQUAL(controller(false, OL, false), "{0, 1, 0, 0}, {0, 1, 0}");
 }
 void test_Controller_SMB(void) {
+        obstacle_Location OL;
 
+        OL.F = true;
+        OL.L = true;
+        OL.R = true;
+        CU_ASSERT_STRING_EQUAL(controller(false, OL, false), "{0, 0, 0, 0}, {0, 1, 0}, {0, 0, 0, 1}");
 }
